@@ -325,7 +325,7 @@ function initDesktop() {
   // ─── Message Rendering ───
   function addMessage(role, handle, parts) {
     const row = document.createElement('div');
-    row.className = `msg-row ${role === 'user' ? 'msg-user' : 'msg-sys'}`;
+    row.className = `msg-row ${role === 'user' ? 'msg-user' : ''}`;
     row.innerHTML = `<span class="msg-handle">${handle}</span>`;
     const bubble = document.createElement('div');
     bubble.className = `msg-bubble ${role === 'user' ? 'msg-usr' : 'msg-sys'}`;
