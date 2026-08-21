@@ -208,7 +208,7 @@ a{color:inherit;text-decoration:none}
 .timestamp{font-size:10px;color:#404040;opacity:.6;font-family:'IBM Plex Mono',monospace;padding:0 3px}
 .msg-bubble{max-width:85%;padding:8px 14px;font-size:14px;line-height:1.6;word-break:break-word}
 .msg-sys{
-  background:#fffff5;border:1px solid #e0e0c0;
+  background:#fffff0;border:1px solid #e8e8c8;
   box-shadow:none;
 }
 .msg-usr{
