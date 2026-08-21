@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <meta name="description" content="Algorithmic Trader &amp; Quant Developer building systematic trading systems across U.S. equities and Indian options." />
+  <meta property="og:title" content="Rakheeb Shaikh — Algorithmic Trader &amp; Quant Developer" />
+  <meta property="og:description" content="Quantitative trading systems built from research, tested through data, and deployed with disciplined execution." />
+  <meta property="og:type" content="website" />
+  <meta name="theme-color" content="#008080" />
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon.png" />
+  <link rel="apple-touch-icon" href="favicon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=VT323&family=IBM+Plex+Mono:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+  <title>Rakheeb Shaikh</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <div id="boot-screen">
+    <pre id="boot-lines"></pre>
+    <div class="boot-hint">press any key to skip</div>
+  </div>
+
+  <div id="app" style="display:none">
+    <div class="desktop" id="desktop">
+      <div id="desktop-icons">
+        <button class="desk-icon" id="icon-open">
+          <span class="desk-icon-img">👤</span>
+          <span class="desk-icon-label">Rakheeb</span>
+        </button>
+      </div>
+
+      <div class="window" id="chat-window" style="display:none">
+        <div class="title-bar" id="title-bar">
+          <span style="font-size:15px;line-height:1">🖥️</span>
+          <span class="title-bar-text">rakheeb.exe</span>
+          <div class="title-bar-controls">
+            <button class="title-btn" id="btn-minimize" title="Minimize">_</button>
+            <button class="title-btn" title="Maximize">□</button>
+            <button class="title-btn" id="btn-close" title="Close">✕</button>
+          </div>
+        </div>
+        <div class="menu-bar">
+          <div class="menu-item-wrap">
+            <button class="menu-item" id="menu-file"><u>F</u>ile</button>
+          </div>
+          <div class="menu-item-wrap">
+            <button class="menu-item" id="menu-view"><u>V</u>iew</button>
+          </div>
+          <div class="menu-item-wrap">
+            <button class="menu-item" id="menu-help"><u>H</u>elp</button>
+          </div>
+        </div>
+        <div class="messages-scroll" id="messages"></div>
+        <div class="chips-row" id="chips"></div>
+        <div class="input-area">
+          <div class="sugg-popup" id="sugg-popup"></div>
+          <form class="input-row" id="chat-form">
+            <span class="input-prompt">&gt;</span>
+            <input id="chat-input" type="text" placeholder="Type /help for commands..." autocomplete="off" />
+            <button type="submit" class="input-send" id="send-btn">Send</button>
+          </form>
+        </div>
+        <div class="status-bar">
+          <span class="status-cell"><span class="status-online">●</span> Online — Hyderabad, India</span>
+          <span class="status-cell status-year" id="status-year">1995</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
