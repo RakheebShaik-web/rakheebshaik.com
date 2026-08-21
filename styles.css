@@ -40,7 +40,7 @@ a{color:inherit;text-decoration:none}
 .boot-hint{
   position:absolute;bottom:24px;right:32px;
   font-size:16px;color:#666;
-  animation:blink 1.2s step-end infinite;
+  animation:blink 1s step-end infinite;
 }
 @keyframes blink{50%{opacity:0}}
 
@@ -67,16 +67,17 @@ a{color:inherit;text-decoration:none}
   width:86px;display:flex;flex-direction:column;align-items:center;gap:5px;
   padding:7px 4px;border:1px solid transparent;
   user-select:none;-webkit-user-select:none;touch-action:none;
-  cursor:pointer;
+  cursor:pointer;background:none;
 }
 .desk-icon-img{
   width:48px;height:48px;object-fit:contain;
   image-rendering:pixelated;pointer-events:none;
+  filter:drop-shadow(1px 2px 0 rgba(0,0,0,.45));
 }
 .desk-icon-label{
   font-size:12px;color:#fff;text-align:center;line-height:1.15;
   text-shadow:1px 1px 0 rgba(0,0,0,.6);
-  padding:1px 4px;pointer-events:none;word-break:break-word;
+  padding:1px 4px;pointer-events:none;white-space:nowrap;
 }
 .desk-icon:active .desk-icon-img{filter:brightness(1.1) drop-shadow(0 2px 4px rgba(0,0,0,.5));transform:scale(1.06)}
 .desk-icon:active .desk-icon-label{background:var(--win95-navy);color:#fff}
@@ -89,12 +90,12 @@ a{color:inherit;text-decoration:none}
   background:var(--win95-gray);
   box-shadow:inset -1px -1px 0 #808080,inset 1px 1px 0 #fff,inset -2px -2px 0 #404040,inset 2px 2px 0 #dfdfdf;
   position:relative;
-  animation:winOpen .18s cubic-bezier(.2,.8,.3,1);
+  animation:winOpen .08s step-end;
 }
 @media(min-width:520px){
   .window{height:auto;min-height:700px;max-height:85vh;margin:0}
 }
-@keyframes winOpen{from{opacity:0;transform:scale(.97)}to{opacity:1;transform:scale(1)}}
+@keyframes winOpen{from{opacity:0}to{opacity:1}}
 
 /* ─── TITLE BAR ─── */
 .title-bar{
@@ -146,6 +147,12 @@ a{color:inherit;text-decoration:none}
   box-shadow:inset -1px -1px 0 #808080,inset 1px 1px 0 #fff,inset -2px -2px 0 #404040,inset 2px 2px 0 #dfdfdf,
   2px 2px 0 rgba(0,0,0,.25);
   padding:2px;
+  opacity:0;transform:translateY(-4px);
+  pointer-events:none;
+  transition:opacity .15s ease,transform .15s ease;
+}
+.menu-dropdown.open{
+  opacity:1;transform:translateY(0);pointer-events:auto;
 }
 .menu-dropdown-item{
   display:block;width:100%;text-align:left;font-family:'IBM Plex Mono',monospace;font-size:12px;
@@ -196,9 +203,10 @@ a{color:inherit;text-decoration:none}
   margin-bottom:6px;display:flex;flex-direction:column;align-items:flex-start;gap:2px;
 }
 .msg-row.msg-visible{opacity:1;transform:translateY(0)}
+.msg-row.msg-user{align-items:flex-end}
 .msg-handle{font-family:'VT323',monospace;font-size:14px;color:#000080;padding-left:2px}
 .timestamp{font-size:10px;color:#404040;opacity:.6;font-family:'IBM Plex Mono',monospace;padding:0 3px}
-.msg-bubble{max-width:88%;padding:6px 10px;font-size:13px;line-height:1.55;word-break:break-word}
+.msg-bubble{max-width:85%;padding:8px 14px;font-size:14px;line-height:1.6;word-break:break-word}
 .msg-sys{
   background:#ffffcc;border:1px solid #e6e6a0;
   box-shadow:1px 1px 0 #e6e6a0;
@@ -208,12 +216,13 @@ a{color:inherit;text-decoration:none}
   box-shadow:1px 1px 0 #a0b8e0;font-weight:500;color:#000080;
 }
 
-.typing-bubble{padding:10px 16px}
+.typing-bubble{padding:8px 12px;min-height:28px}
 .typing-cursor{
   display:inline-block;width:8px;height:14px;background:#000;
-  animation:blink-cursor .8s step-end infinite;
+  animation:blink-block .8s step-end infinite;
+  vertical-align:middle;
 }
-@keyframes blink-cursor{0%,100%{opacity:1}50%{opacity:0}}
+@keyframes blink-block{0%,49%{opacity:1}50%,100%{opacity:0}}
 
 /* ─── DIVIDER ─── */
 .msg-divider{
@@ -233,9 +242,9 @@ a{color:inherit;text-decoration:none}
   box-shadow:inset -1px -1px 0 #808080,inset 1px 1px 0 #fff,inset -2px -2px 0 #404040,inset 2px 2px 0 #dfdfdf;
   border:none;cursor:pointer;
   text-align:left;font-family:inherit;color:inherit;
-  opacity:0;animation:cardIn .3s ease forwards;
+  opacity:0;animation:cardIn .15s step-end forwards;
 }
-@keyframes cardIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+@keyframes cardIn{from{opacity:0}to{opacity:1}}
 .win-card:active{
   box-shadow:inset 1px 1px 0 #808080,inset -1px -1px 0 #fff,inset 2px 2px 0 #404040,inset -2px -2px 0 #dfdfdf;
   padding-top:9px;padding-left:11px;
@@ -316,6 +325,7 @@ a{color:inherit;text-decoration:none}
   border:none;color:#000;cursor:pointer;flex-shrink:0;
 }
 .input-send:active{box-shadow:inset 1px 1px 0 #808080,inset -1px -1px 0 #fff;padding-top:5px;padding-left:15px}
+.input-send:disabled{color:#808080}
 
 /* ─── SUGGESTIONS POPUP ─── */
 .sugg-popup{
@@ -360,8 +370,42 @@ a{color:inherit;text-decoration:none}
 .egg-ascii{font-family:'IBM Plex Mono',monospace;font-size:11px;line-height:1.3;color:#000080;white-space:pre;text-align:center}
 
 @media(max-width:520px){
-  .window{max-width:100vw}
-  #desktop-icons{flex-direction:row;align-content:flex-start;padding:12px 6px;gap:4px}
+  body{overflow:auto}
+  .desktop{min-height:100dvh;padding:0}
+  #desktop-icons{flex-direction:row;align-content:flex-start;padding:10px 6px;gap:4px}
   .desk-icon{width:76px}
   .desk-icon-img{width:40px;height:40px}
+  .desk-icon-label{font-size:11px}
+  .window{
+    width:100%;max-width:100%;height:100dvh;max-height:none;
+    border:none;box-shadow:none;
+    position:fixed;inset:0;z-index:100;
+  }
+  .title-bar{padding:4px 6px;gap:8px}
+  .title-bar-text{font-size:15px}
+  .title-btn{width:22px;height:22px;font-size:13px}
+  .menu-bar{padding:3px 6px}
+  .menu-item{font-size:13px;padding:4px 10px}
+  .messages-scroll{padding:8px 8px 16px;font-size:14px}
+  .msg-bubble{max-width:92%;padding:8px 12px;font-size:14px;line-height:1.55}
+  .msg-row{margin-bottom:14px}
+  .chips-row{padding:6px 6px;gap:4px}
+  .chip{font-size:14px;padding:4px 10px}
+  .input-area{padding:4px}
+  .input-row{padding:3px}
+  .input-prompt{font-size:16px;padding-left:4px}
+  #chat-input{font-size:15px;padding:8px 4px}
+  .input-send{font-size:14px;padding:5px 12px}
+  .status-bar{padding:3px 4px}
+  .status-cell{font-size:10px;padding:2px 4px}
+  .win-panel-body{padding:10px}
+  .tools-items{gap:3px}
+  .tool-chip{font-size:12px;padding:4px 8px}
+  .sugg-row{padding:6px 10px}
+  .sugg-cmd{font-size:14px;min-width:90px}
+  .sugg-desc{font-size:12px}
+  .egg-window{width:92%;max-width:none}
+  .egg-body{padding:16px}
+  .egg-text{font-size:18px}
+  .egg-ascii{font-size:9px}
 }

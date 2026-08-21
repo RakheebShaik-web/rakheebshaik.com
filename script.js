@@ -62,6 +62,8 @@ function initDesktop() {
   $('#btn-close').addEventListener('click', closeWindow);
   $('#btn-minimize').addEventListener('click', closeWindow);
 
+
+
   function openWindow(cmd) {
     chatWindow.style.display = 'flex';
     chatWindow.classList.add('active');
@@ -118,18 +120,22 @@ function initDesktop() {
         }
       });
       btn.closest('.menu-item-wrap').appendChild(dd);
+      requestAnimationFrame(() => dd.classList.add('open'));
     });
   });
 
   function closeMenus() {
     $$('.menu-item').forEach(m => m.classList.remove('menu-item-open'));
     const dd = $('#active-dropdown');
-    if (dd) dd.remove();
+    if (dd) {
+      dd.classList.remove('open');
+      setTimeout(() => { if (dd.parentNode) dd.remove(); }, 160);
+    }
   }
 
   document.addEventListener('click', closeMenus);
 
-  // ─── Easter Egg: double-click "1995" ───
+  // ─── Easter Egg: double-click "2003" ───
   let lastClick = 0;
   $('#status-year').addEventListener('click', () => {
     const now = Date.now();
@@ -143,7 +149,7 @@ function initDesktop() {
     overlay.innerHTML = `
       <div class="egg-window">
         <div class="title-bar">
-          <span class="title-bar-text">rakheeb_1995.bmp</span>
+          <span class="title-bar-text">rakheeb_2003.bmp</span>
           <div class="title-bar-controls">
             <button class="title-btn" id="egg-close">✕</button>
           </div>
@@ -249,11 +255,30 @@ function initDesktop() {
   };
 
   // ─── Welcome ───
-  function showWelcome() {
-    addMessage('system', '@rakheeb-bot', [
-      "Hey! I'm Rakheeb's portfolio bot.",
-      "Type /help to see what I can do, or click the chips below.",
-    ]);
+  async function showWelcome() {
+    const msgs = [
+      "Hey there 👋",
+      "I'm Rakheeb Shaikh",
+      "I build automated trading systems",
+      "Algorithmic Trader · Quant Developer · Hyderabad, India",
+      "Type a command below or tap one to explore ↓",
+    ];
+    for (let i = 0; i < msgs.length; i++) {
+      // Show blinking cursor
+      const cur = document.createElement('div');
+      cur.className = 'msg-row msg-visible';
+      cur.id = 'welcome-cursor';
+      cur.innerHTML = '<div class="msg-bubble msg-sys typing-bubble"><span class="typing-cursor"></span></div>';
+      $('#messages').appendChild(cur);
+      scrollBottom();
+
+      await new Promise(r => setTimeout(r, 700));
+
+      // Remove cursor, show message
+      cur.remove();
+      addMessage('system', 'rakheeb.exe', [msgs[i]]);
+      await new Promise(r => setTimeout(r, 500));
+    }
   }
 
   function resetChat() {
@@ -274,7 +299,7 @@ function initDesktop() {
     row.appendChild(bubble);
     const ts = document.createElement('span');
     ts.className = 'timestamp';
-    ts.textContent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    ts.textContent = new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }).replace(/^0/, '');
     row.appendChild(ts);
     $('#messages').appendChild(row);
     requestAnimationFrame(() => row.classList.add('msg-visible'));
@@ -391,7 +416,7 @@ function initDesktop() {
     const data = commands[cmd];
     if (!data) {
       addMessage('user', '> You', [cmd]);
-      addMessage('system', '@rakheeb-bot', [`Unknown command: ${cmd}. Type /help for available commands.`]);
+      addMessage('system', 'rakheeb.exe', [`Unknown command: ${cmd}. Type /help for available commands.`]);
       return;
     }
 
@@ -400,24 +425,24 @@ function initDesktop() {
 
     // Typing indicator
     const typing = document.createElement('div');
-    typing.className = 'msg-row';
-    typing.innerHTML = `<span class="msg-handle">@rakheeb-bot</span><div class="msg-bubble msg-sys typing-bubble"><span class="typing-cursor"></span></div>`;
+    typing.className = 'msg-row msg-visible';
+    typing.innerHTML = `<span class="msg-handle">rakheeb.exe</span><div class="msg-bubble msg-sys typing-bubble"><span class="typing-cursor"></span><span class="typing-cursor" style="animation-delay:.15s"></span><span class="typing-cursor" style="animation-delay:.3s"></span></div>`;
     $('#messages').appendChild(typing);
     scrollBottom();
 
-    await new Promise(r => setTimeout(r, 600 + Math.random() * 400));
+    await new Promise(r => setTimeout(r, 500 + Math.random() * 300));
     typing.remove();
 
     const parts = data.response();
     for (const part of parts) {
       if (part.type === 'divider') addDivider(part.text);
-      else if (part.type === 'text') addMessage('system', '@rakheeb-bot', [part.text]);
+      else if (part.type === 'text') addMessage('system', 'rakheeb.exe', [part.text]);
       else if (part.type === 'card') addCard(part.icon, part.tag, part.title, part.sub, part.url);
       else if (part.type === 'list') addList(part.items);
       else if (part.type === 'panel') addPanel(part.title, part.items);
       else if (part.type === 'tools') addTools(part.groups);
       else if (part.type === 'heading') addHeading(part.text);
-      await new Promise(r => setTimeout(r, 150));
+      await new Promise(r => setTimeout(r, 200));
     }
 
     isTyping = false;
