@@ -181,7 +181,7 @@ a{color:inherit;text-decoration:none}
 /* ─── MESSAGES ─── */
 .messages-scroll{
   flex:1;overflow-y:auto;overflow-x:hidden;padding:10px 10px 20px;
-  background:#fff;
+  background:var(--win95-gray);
   box-shadow:inset 1px 1px 0 #808080,inset -1px -1px 0 #fff,inset 2px 2px 0 #404040,inset -2px -2px 0 #dfdfdf;
   margin:4px;margin-bottom:0;
   scroll-behavior:smooth;-webkit-overflow-scrolling:touch;
@@ -208,12 +208,12 @@ a{color:inherit;text-decoration:none}
 .timestamp{font-size:10px;color:#404040;opacity:.6;font-family:'IBM Plex Mono',monospace;padding:0 3px}
 .msg-bubble{max-width:85%;padding:8px 14px;font-size:14px;line-height:1.6;word-break:break-word}
 .msg-sys{
-  background:#ffffcc;border:1px solid #e6e6a0;
-  box-shadow:1px 1px 0 #e6e6a0;
+  background:#fffff0;border:1px solid #e8e8c8;
+  box-shadow:1px 1px 0 #e8e8c8;
 }
 .msg-usr{
-  background:#dce8ff;border:1px solid #a0b8e0;
-  box-shadow:1px 1px 0 #a0b8e0;font-weight:500;color:#000080;
+  background:#dce8ff;border:1px solid #b0c8e8;
+  box-shadow:1px 1px 0 #b0c8e8;font-weight:500;color:#000080;
 }
 
 .typing-bubble{padding:8px 12px;min-height:28px}

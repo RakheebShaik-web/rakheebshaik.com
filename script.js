@@ -333,7 +333,7 @@ function initDesktop() {
     row.appendChild(bubble);
     const ts = document.createElement('span');
     ts.className = 'timestamp';
-    ts.textContent = new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }).replace(/^0/, '');
+    ts.textContent = new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit', hour12: true }).replace(/^0/, '').toUpperCase();
     row.appendChild(ts);
     $('#messages').appendChild(row);
     requestAnimationFrame(() => row.classList.add('msg-visible'));
