@@ -2,6 +2,39 @@
 const $ = (s, p = document) => p.querySelector(s);
 const $$ = (s, p = document) => [...p.querySelectorAll(s)];
 
+// ─── Win95 Startup Sound (Web Audio API) ───
+function playStartupSound() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const now = ctx.currentTime;
+
+    // Classic Win95-style ascending synth chords
+    const notes = [
+      { freq: 261.6, start: 0, dur: 0.4 },   // C4
+      { freq: 329.6, start: 0, dur: 0.4 },   // E4
+      { freq: 392.0, start: 0, dur: 0.4 },   // G4
+      { freq: 523.3, start: 0.15, dur: 0.5 }, // C5
+      { freq: 659.3, start: 0.15, dur: 0.5 }, // E5
+      { freq: 784.0, start: 0.35, dur: 0.6 }, // G5
+      { freq: 1047, start: 0.55, dur: 0.8 },  // C6
+      { freq: 1319, start: 0.55, dur: 0.8 },  // E6
+    ];
+
+    notes.forEach(n => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.value = n.freq;
+      gain.gain.setValueAtTime(0, now + n.start);
+      gain.gain.linearRampToValueAtTime(0.08, now + n.start + 0.05);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + n.start + n.dur);
+      osc.connect(gain).connect(ctx.destination);
+      osc.start(now + n.start);
+      osc.stop(now + n.start + n.dur + 0.1);
+    });
+  } catch(e) { /* audio not available */ }
+}
+
 // ─── Boot Sequence ───
 const bootLines = [
   'Microsoft(R) Windows 95',
@@ -18,6 +51,7 @@ const bootLines = [
 ];
 
 function runBoot() {
+  playStartupSound();
   const el = $('#boot-lines');
   let i = 0;
   const skip = () => {
