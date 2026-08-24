@@ -387,10 +387,22 @@ function initDesktop() {
       desc: 'Available commands',
       response: () => [
         { type: 'divider', text: 'COMMANDS' },
-        { type: 'text', text: "Available commands:\n\n/systems  — Trading systems\n/github   — Recent contributions\n/about    — Who I am\n/metrics  — Engineering evidence\n/source   — Portfolio source\n/stack    — Tech stack\n/resume   — Full resume\n/contact  — Get in touch\n/help     — This message\n\nKeyboard: ↑↓ history · Tab autocomplete · Esc close" },
+        { type: 'text', text: "Available commands:\n\n/about    — Who I am\n/systems  — Trading systems\n/github   — Proof of work\n/stack    — Tech stack\n/metrics  — Results & engineering evidence\n/resume   — Full resume\n/contact  — Get in touch\n/source   — Portfolio source\n/help     — This message\n\nKeyboard: ↑↓ history · Tab autocomplete · Esc close" },
       ],
     },
   };
+
+  const commandOrder = [
+    '/about',
+    '/systems',
+    '/github',
+    '/stack',
+    '/metrics',
+    '/resume',
+    '/contact',
+    '/source',
+    '/help',
+  ];
 
   // ─── Welcome ───
   async function showWelcome() {
@@ -637,7 +649,7 @@ function initDesktop() {
   function renderChips() {
     const chips = $('#chips');
     chips.innerHTML = '';
-    Object.entries(commands).forEach(([cmd]) => {
+    commandOrder.forEach(cmd => {
       const btn = document.createElement('button');
       btn.className = 'chip';
       btn.textContent = cmd;
@@ -707,7 +719,7 @@ function initDesktop() {
     closeSugg();
     if (val.startsWith('/')) sendCommand(val);
     else {
-      const match = Object.keys(commands).find(c => c.startsWith(val.toLowerCase()));
+      const match = commandOrder.find(c => c.startsWith(val.toLowerCase()));
       if (match) sendCommand(match);
       else sendCommand(val);
     }
@@ -718,9 +730,9 @@ function initDesktop() {
     const val = input.value.trim().toLowerCase();
     if (!val || val.length < 1) { closeSugg(); return; }
 
-    const matches = Object.entries(commands).filter(([cmd, data]) =>
-      cmd.includes(val) || data.desc.toLowerCase().includes(val)
-    );
+    const matches = commandOrder
+      .map(cmd => [cmd, commands[cmd]])
+      .filter(([cmd, data]) => cmd.includes(val) || data.desc.toLowerCase().includes(val));
     if (matches.length === 0) { closeSugg(); return; }
 
     const popup = $('#sugg-popup');
@@ -748,7 +760,7 @@ function initDesktop() {
       closeSugg();
     } else if (event.key === 'Tab') {
       const value = input.value.trim().toLowerCase();
-      const match = Object.keys(commands).find(command => command.startsWith(value));
+      const match = commandOrder.find(command => command.startsWith(value));
       if (match) {
         event.preventDefault();
         input.value = match;
