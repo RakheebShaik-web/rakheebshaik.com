@@ -207,7 +207,10 @@ function initDesktop() {
       dd.id = 'active-dropdown';
       menus[id].forEach(item => {
         if (item.sep) {
-          dd.innerHTML += '<div class="menu-dropdown-sep"></div>';
+          const separator = document.createElement('div');
+          separator.className = 'menu-dropdown-sep';
+          separator.setAttribute('role', 'separator');
+          dd.appendChild(separator);
         } else {
           const b = document.createElement('button');
           b.className = 'menu-dropdown-item';
