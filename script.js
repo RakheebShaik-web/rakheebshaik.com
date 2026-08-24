@@ -294,10 +294,6 @@ function initDesktop() {
         { type: 'divider', text: 'GITHUB' },
         { type: 'text', text: 'Recent public development activity from GitHub. Loaded after the command so it never slows the portfolio intro.' },
         { type: 'github' },
-        { type: 'list', items: [
-          { icon: '🐙', name: 'github.com/RakheebShaik-web', desc: 'PROFILE & CONTRIBUTION GRAPH', url: 'https://github.com/RakheebShaik-web' },
-          { icon: '⌘', name: 'Public repositories', desc: 'BROWSE PROJECT SOURCE', url: 'https://github.com/RakheebShaik-web?tab=repositories' },
-        ]},
       ],
     },
     '/about': {
@@ -572,13 +568,6 @@ function initDesktop() {
 
         if (!contributionResponse.ok) throw new Error('Contribution total is unavailable');
         const contributionData = await contributionResponse.json();
-        const stats = [
-          ['ACTIVE DAYS', contributionData.activeDays],
-          ['CURRENT STREAK', `${contributionData.currentStreak}d`],
-          ['LONGEST STREAK', `${contributionData.longestStreak}d`],
-          ['PUBLIC REPOS', contributionData.publicRepos ?? '—'],
-        ];
-
         body.textContent = '';
         const summary = document.createElement('div');
         summary.className = 'github-summary';
@@ -588,7 +577,7 @@ function initDesktop() {
         const summaryCopy = document.createElement('div');
         const summaryTitle = document.createElement('span');
         summaryTitle.className = 'github-summary-title';
-        summaryTitle.textContent = 'contributions';
+        summaryTitle.textContent = 'public contributions';
         const summaryPeriod = document.createElement('small');
         summaryPeriod.textContent = contributionData.period;
         summaryCopy.append(summaryTitle, summaryPeriod);
@@ -623,23 +612,40 @@ function initDesktop() {
         legend.append(document.createTextNode('More'));
         heatmapSection.append(heatmapHeading, heatmapWrap, legend);
 
-        const grid = document.createElement('div');
-        grid.className = 'github-stat-grid';
-        stats.forEach(([label, value]) => {
-          const item = document.createElement('div');
-          item.className = 'github-stat';
-          const small = document.createElement('small');
-          small.textContent = label;
+        const status = document.createElement('div');
+        status.className = 'github-status';
+        [
+          [`${contributionData.activeDays}`, 'active days'],
+          [`${contributionData.longestStreak}d`, 'longest streak'],
+          [`${contributionData.publicRepos ?? '—'}`, 'public repos'],
+        ].forEach(([value, label]) => {
+          const item = document.createElement('span');
+          item.className = 'github-status-item';
           const strong = document.createElement('strong');
-          strong.textContent = String(value);
-          item.append(small, strong);
-          grid.appendChild(item);
+          strong.textContent = value;
+          item.append(strong, document.createTextNode(` ${label}`));
+          status.appendChild(item);
+        });
+
+        const actions = document.createElement('div');
+        actions.className = 'github-actions';
+        [
+          ['Open GitHub profile', 'https://github.com/RakheebShaik-web'],
+          ['Browse repositories', 'https://github.com/RakheebShaik-web?tab=repositories'],
+        ].forEach(([label, url]) => {
+          const link = document.createElement('a');
+          link.className = 'github-action';
+          link.href = url;
+          link.target = '_blank';
+          link.rel = 'noopener noreferrer';
+          link.textContent = `${label} ↗`;
+          actions.appendChild(link);
         });
         const note = document.createElement('p');
         note.className = 'github-note';
         const refreshed = new Date(contributionData.refreshedAt).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
         note.textContent = `Live from GitHub · refreshed ${refreshed}`;
-        body.append(summary, heatmapSection, grid, note);
+        body.append(summary, heatmapSection, status, actions, note);
         scrollBottom();
       } catch (_error) {
         body.textContent = 'Live contribution data is unavailable right now. Open the GitHub profile below to view the contribution graph.';
