@@ -568,29 +568,61 @@ function initDesktop() {
       body.textContent = 'Loading live GitHub contribution data...';
 
       try {
-        const [contributionResponse, eventsResponse] = await Promise.all([
-          fetch(`/api/github-contributions?refresh=${Date.now()}`, { cache: 'no-store' }),
-          fetch('https://api.github.com/users/RakheebShaik-web/events/public?per_page=100', {
-            cache: 'no-store',
-            headers: { Accept: 'application/vnd.github+json' },
-          }),
-        ]);
+        const contributionResponse = await fetch(`/api/github-contributions?refresh=${Date.now()}`, { cache: 'no-store' });
 
         if (!contributionResponse.ok) throw new Error('Contribution total is unavailable');
         const contributionData = await contributionResponse.json();
-        const events = eventsResponse.ok ? await eventsResponse.json() : [];
-        const pushes = events.filter(event => event.type === 'PushEvent');
-        const repositories = new Set(events.map(event => event.repo?.name).filter(Boolean));
-        const oldest = events.at(-1)?.created_at;
-        const days = oldest ? Math.max(1, Math.ceil((Date.now() - new Date(oldest).getTime()) / 86400000)) : 0;
         const stats = [
-          ['CONTRIBUTIONS', contributionData.contributions],
-          ['PUSH EVENTS', pushes.length],
-          ['REPOS TOUCHED', repositories.size],
-          ['PUBLIC EVENTS', events.length || '—'],
+          ['ACTIVE DAYS', contributionData.activeDays],
+          ['CURRENT STREAK', `${contributionData.currentStreak}d`],
+          ['LONGEST STREAK', `${contributionData.longestStreak}d`],
+          ['PUBLIC REPOS', contributionData.publicRepos ?? '—'],
         ];
 
         body.textContent = '';
+        const summary = document.createElement('div');
+        summary.className = 'github-summary';
+        const total = document.createElement('strong');
+        total.className = 'github-total';
+        total.textContent = Number(contributionData.contributions).toLocaleString();
+        const summaryCopy = document.createElement('div');
+        const summaryTitle = document.createElement('span');
+        summaryTitle.className = 'github-summary-title';
+        summaryTitle.textContent = 'contributions';
+        const summaryPeriod = document.createElement('small');
+        summaryPeriod.textContent = contributionData.period;
+        summaryCopy.append(summaryTitle, summaryPeriod);
+        summary.append(total, summaryCopy);
+
+        const heatmapSection = document.createElement('div');
+        heatmapSection.className = 'github-heatmap-section';
+        const heatmapHeading = document.createElement('div');
+        heatmapHeading.className = 'github-heatmap-heading';
+        heatmapHeading.textContent = 'CONTRIBUTION ACTIVITY';
+        const heatmapWrap = document.createElement('div');
+        heatmapWrap.className = 'github-heatmap-wrap';
+        const heatmap = document.createElement('div');
+        heatmap.className = 'github-heatmap';
+        contributionData.days.forEach(day => {
+          const cell = document.createElement('span');
+          const level = day.count === 0 ? 0 : day.count < 4 ? 1 : day.count < 7 ? 2 : day.count < 10 ? 3 : 4;
+          cell.className = `github-day github-day-${level}`;
+          cell.title = `${day.date}: ${day.count} contribution${day.count === 1 ? '' : 's'}`;
+          cell.setAttribute('aria-label', cell.title);
+          heatmap.appendChild(cell);
+        });
+        heatmapWrap.appendChild(heatmap);
+        const legend = document.createElement('div');
+        legend.className = 'github-legend';
+        legend.append(document.createTextNode('Less'));
+        for (let level = 0; level <= 4; level++) {
+          const swatch = document.createElement('span');
+          swatch.className = `github-day github-day-${level}`;
+          legend.appendChild(swatch);
+        }
+        legend.append(document.createTextNode('More'));
+        heatmapSection.append(heatmapHeading, heatmapWrap, legend);
+
         const grid = document.createElement('div');
         grid.className = 'github-stat-grid';
         stats.forEach(([label, value]) => {
@@ -606,9 +638,8 @@ function initDesktop() {
         const note = document.createElement('p');
         note.className = 'github-note';
         const refreshed = new Date(contributionData.refreshedAt).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
-        const activityNote = days ? ` Public events cover approximately ${days} days.` : '';
-        note.textContent = `${contributionData.contributions} contributions in the ${contributionData.period}. Refreshed ${refreshed}.${activityNote}`;
-        body.append(grid, note);
+        note.textContent = `Live from GitHub · refreshed ${refreshed}`;
+        body.append(summary, heatmapSection, grid, note);
         scrollBottom();
       } catch (_error) {
         body.textContent = 'Live contribution data is unavailable right now. Open the GitHub profile below to view the contribution graph.';
