@@ -50,29 +50,44 @@ const bootLines = [
   'C:\\> rakheeb.exe',
 ];
 
+let bootFinished = false;
+
 function runBoot() {
   playStartupSound();
   const el = $('#boot-lines');
   let i = 0;
-  const skip = () => {
+  let timer = null;
+  const cleanup = () => {
     document.removeEventListener('keydown', skip);
     document.removeEventListener('click', skip);
+    if (timer) clearTimeout(timer);
+  };
+  const skip = () => {
+    if (bootFinished) return;
+    cleanup();
     el.innerHTML = bootLines.join('\n');
-    setTimeout(finishBoot, 300);
+    timer = setTimeout(finishBoot, 300);
   };
   document.addEventListener('keydown', skip);
   document.addEventListener('click', skip);
 
   function typeLine() {
-    if (i >= bootLines.length) { setTimeout(finishBoot, 600); return; }
+    if (bootFinished) return;
+    if (i >= bootLines.length) {
+      cleanup();
+      timer = setTimeout(finishBoot, 600);
+      return;
+    }
     el.innerHTML += bootLines[i] + '\n';
     i++;
-    setTimeout(typeLine, 80 + Math.random() * 60);
+    timer = setTimeout(typeLine, 80 + Math.random() * 60);
   }
   typeLine();
 }
 
 function finishBoot() {
+  if (bootFinished) return;
+  bootFinished = true;
   const bs = $('#boot-screen');
   bs.style.opacity = '0';
   bs.style.transition = 'opacity .3s';
@@ -90,6 +105,7 @@ function initDesktop() {
   let messages = [];
   let isTyping = false;
   let inited = false;
+  let welcomeGeneration = 0;
   const input = $('#chat-input');
   const sendButton = $('#send-btn');
 
@@ -375,6 +391,7 @@ function initDesktop() {
 
   // ─── Welcome ───
   async function showWelcome() {
+    const generation = ++welcomeGeneration;
     const msgs = [
       "Hey there 👋",
       "I'm Rakheeb Shaikh",
@@ -393,12 +410,17 @@ function initDesktop() {
       scrollBottom();
 
       await new Promise(r => setTimeout(r, 700 + Math.random() * 350));
+      if (generation !== welcomeGeneration) {
+        cur.remove();
+        return;
+      }
 
       // Remove cursor, show message
       cur.remove();
       addMessage('system', 'rakheeb.exe', [msgs[i]]);
     }
     await new Promise(r => setTimeout(r, 400));
+    if (generation !== welcomeGeneration) return;
     renderChips();
     input.disabled = false;
     sendButton.disabled = false;
