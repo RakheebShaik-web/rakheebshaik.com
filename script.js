@@ -299,17 +299,7 @@ function initDesktop() {
       desc: 'Who is Rakheeb',
       response: () => [
         { type: 'divider', text: 'ABOUT' },
-        { type: 'text', text: "I'm Rakheeb Shaikh — an algorithmic trader and quant developer based in Hyderabad, India." },
-        { type: 'text', text: "I research market ideas and develop automated trading systems that handle screening, risk, execution, and monitoring. My background in Computer Science and AI gives me the technical foundation to turn trading ideas into reliable systems." },
-        { type: 'text', text: "I build systematic trading systems across U.S. equities and Indian options — strategies researched from data, engineered with risk first, and deployed with disciplined execution." },
-        { type: 'panel', title: 'Quick Facts', items: [
-          { label: 'LOCATION', value: 'Hyderabad, India' },
-          { label: 'FOCUS', value: 'Systematic trading & automation' },
-          { label: 'MARKETS', value: 'U.S. equities · NSE options' },
-          { label: 'EDUCATION', value: 'Computer Science & AI' },
-          { label: 'STATUS', value: '🟢 Open to opportunities' },
-        ]},
-        { type: 'text', text: "Currently building at the intersection of quantitative research, risk engineering, and automated execution. I work across two distinct market structures — U.S. equities and Indian options — and that contrast shapes how I research and engineer systems." },
+        { type: 'about' },
       ],
     },
     '/metrics': {
@@ -534,6 +524,30 @@ function initDesktop() {
     scrollBottom();
   }
 
+  function addAboutProfile() {
+    const profile = document.createElement('section');
+    profile.className = 'about-profile win-panel';
+    profile.innerHTML = `
+      <div class="win-panel-bar"><span class="win-panel-bar-icon">▣</span>Profile — Rakheeb Shaikh</div>
+      <div class="about-profile-body">
+        <p class="about-role">Algorithmic trader <span>&amp;</span> quant developer</p>
+        <p class="about-positioning">I turn trading ideas into tested, automated systems.</p>
+        <dl class="about-facts">
+          <div><dt>Based in</dt><dd>Hyderabad, India</dd></div>
+          <div><dt>Background</dt><dd>Computer Science &amp; AI</dd></div>
+          <div><dt>Markets</dt><dd>U.S. equities · NSE options</dd></div>
+          <div><dt>Status</dt><dd><span class="about-status-dot" aria-hidden="true"></span>Open to opportunities</dd></div>
+        </dl>
+        <div class="about-process" aria-label="Working process">
+          <span>Research</span><b>→</b><span>Validate</span><b>→</b><span>Automate</span><b>→</b><span>Monitor</span>
+        </div>
+        <button class="about-next" type="button">View systems →</button>
+      </div>`;
+    profile.querySelector('.about-next').addEventListener('click', () => runCommand('/systems'));
+    $('#messages').appendChild(profile);
+    scrollBottom();
+  }
+
   function addGitHubActivity() {
     const panel = document.createElement('div');
     panel.className = 'win-panel';
@@ -720,6 +734,7 @@ function initDesktop() {
       else if (part.type === 'card') addCard(part.icon, part.tag, part.title, part.sub, part.url);
       else if (part.type === 'list') addList(part.items);
       else if (part.type === 'panel') addPanel(part.title, part.items);
+      else if (part.type === 'about') addAboutProfile();
       else if (part.type === 'github') addGitHubActivity();
       else if (part.type === 'tools') addTools(part.groups);
       else if (part.type === 'heading') addHeading(part.text);
