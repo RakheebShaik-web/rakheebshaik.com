@@ -543,7 +543,7 @@ function initDesktop() {
         </div>
         <button class="about-next" type="button">View systems →</button>
       </div>`;
-    profile.querySelector('.about-next').addEventListener('click', () => runCommand('/systems'));
+    profile.querySelector('.about-next').addEventListener('click', () => sendCommand('/systems'));
     $('#messages').appendChild(profile);
     scrollBottom();
   }
