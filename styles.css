@@ -13,6 +13,7 @@ body{
 img,picture,video,canvas,svg{display:block;max-width:100%}
 input,button,textarea,select{font:inherit}
 a{color:inherit;text-decoration:none}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 
 :root{
   --win95-teal:#008080;
@@ -283,6 +284,12 @@ a{color:inherit;text-decoration:none}
 }
 .win-panel-bar-icon{font-size:13px}
 .win-panel-body{padding:12px;background:#fff;margin:3px;box-shadow:inset 1px 1px 0 #808080,inset -1px -1px 0 #fff,inset 2px 2px 0 #404040,inset -2px -2px 0 #dfdfdf}
+.github-activity{font-size:12px;line-height:1.55}
+.github-stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px}
+.github-stat{background:#c0c0c0;padding:7px 9px;box-shadow:inset -1px -1px 0 #808080,inset 1px 1px 0 #fff}
+.github-stat small{display:block;font-size:9px;letter-spacing:.7px;color:#555;margin-bottom:2px}
+.github-stat strong{font-size:13px;color:#000080}
+.github-note{margin-top:8px;color:#404040;font-size:10px}
 
 /* ─── TOOLS ─── */
 .tools-group{margin-bottom:10px}
@@ -407,4 +414,8 @@ a{color:inherit;text-decoration:none}
   .egg-body{padding:16px}
   .egg-text{font-size:18px}
   .egg-ascii{font-size:9px}
+}
+
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
 }

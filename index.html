@@ -18,6 +18,8 @@
 </head>
 <body>
 
+  <h1 class="sr-only">Rakheeb Shaikh — Algorithmic Trader and Quant Developer</h1>
+
   <div id="boot-screen">
     <pre id="boot-lines"></pre>
     <div class="boot-hint">press any key to skip</div>
@@ -37,9 +39,9 @@
           <img src="win95-chat-icon.png" alt="" class="title-bar-icon-img" />
           <span class="title-bar-text">rakheeb.exe</span>
           <div class="title-bar-controls">
-            <button class="title-btn" id="btn-minimize" title="Minimize">_</button>
-            <button class="title-btn" title="Maximize">□</button>
-            <button class="title-btn" id="btn-close" title="Close">✕</button>
+            <button class="title-btn" id="btn-minimize" title="Minimize" aria-label="Minimize window">_</button>
+            <button class="title-btn" title="Maximize" aria-label="Maximize window">□</button>
+            <button class="title-btn" id="btn-close" title="Close" aria-label="Close window">✕</button>
           </div>
         </div>
         <div class="menu-bar">
@@ -53,18 +55,18 @@
             <button class="menu-item" id="menu-help"><u>H</u>elp</button>
           </div>
         </div>
-        <div class="messages-scroll" id="messages"></div>
-        <div class="chips-row" id="chips"></div>
+        <div class="messages-scroll" id="messages" role="log" aria-live="polite" aria-relevant="additions" aria-label="Portfolio conversation"></div>
+        <nav class="chips-row" id="chips" aria-label="Available shortcuts"></nav>
         <div class="input-area">
           <div class="sugg-popup" id="sugg-popup"></div>
           <form class="input-row" id="chat-form">
             <span class="input-prompt">&gt;</span>
-            <input id="chat-input" type="text" placeholder="Type /help for commands..." autocomplete="off" />
+            <input id="chat-input" type="text" placeholder="Type /help for commands..." autocomplete="off" aria-label="Portfolio command" />
             <button type="submit" class="input-send" id="send-btn">Send</button>
           </form>
         </div>
         <div class="status-bar">
-          <span class="status-cell"><span class="status-online">●</span> Online — Hyderabad, India</span>
+          <span class="status-cell" role="status"><span class="status-online">●</span> Online — Hyderabad, India</span>
           <span class="status-cell status-year" id="status-year" title="Try double-clicking...">1995</span>
         </div>
       </div>

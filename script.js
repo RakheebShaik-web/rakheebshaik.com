@@ -258,6 +258,29 @@ function initDesktop() {
 
   // ─── Commands ───
   const commands = {
+    '/systems': {
+      desc: 'Trading systems & projects',
+      response: () => [
+        { type: 'divider', text: 'SYSTEMS' },
+        { type: 'text', text: "Here are the trading systems I've built — from live automation to research platforms." },
+        { type: 'card', icon: '⚡', tag: 'LIVE AUTOMATION', title: 'Automated U.S. Stock Trading Bot', sub: 'Fully automated pipeline from screening to order management, with exposure caps, duplicate order protection, and auditable live decisions.', url: 'https://github.com/RakheebShaik-web/alpaca.bot-eod-dashboard' },
+        { type: 'card', icon: '📊', tag: 'RESEARCH PLATFORM', title: 'Quant Screener', sub: 'Ranks liquid stocks, confirms trend and momentum on completed bars, then sizes every trade using account risk and ATR based invalidation.', url: 'https://github.com/RakheebShaik-web/quant-screener' },
+        { type: 'card', icon: '📈', tag: 'RESEARCH · NO LIVE ORDERS', title: 'NSE Options Selling System', sub: 'Researches liquid NSE underlyings and explicit volatility, trend, liquidity, and event risk conditions before a structure is considered.', url: 'https://github.com/RakheebShaik-web/stocks-options-strategy' },
+        { type: 'text', text: "Process: Research the edge → Engineer the risk → Automate execution → Measure and refine" },
+      ],
+    },
+    '/github': {
+      desc: 'Recent GitHub contributions',
+      response: () => [
+        { type: 'divider', text: 'GITHUB' },
+        { type: 'text', text: 'Recent public development activity from GitHub. Loaded after the command so it never slows the portfolio intro.' },
+        { type: 'github' },
+        { type: 'list', items: [
+          { icon: '🐙', name: 'github.com/RakheebShaik-web', desc: 'PROFILE & CONTRIBUTION GRAPH', url: 'https://github.com/RakheebShaik-web' },
+          { icon: '⌘', name: 'Public repositories', desc: 'BROWSE PROJECT SOURCE', url: 'https://github.com/RakheebShaik-web?tab=repositories' },
+        ]},
+      ],
+    },
     '/about': {
       desc: 'Who is Rakheeb',
       response: () => [
@@ -275,15 +298,30 @@ function initDesktop() {
         { type: 'text', text: "Currently building at the intersection of quantitative research, risk engineering, and automated execution. I work across two distinct market structures — U.S. equities and Indian options — and that contrast shapes how I research and engineer systems." },
       ],
     },
-    '/systems': {
-      desc: 'Trading systems & projects',
+    '/metrics': {
+      desc: 'Engineering evidence',
       response: () => [
-        { type: 'divider', text: 'SYSTEMS' },
-        { type: 'text', text: "Here are the trading systems I've built — from live automation to research platforms." },
-        { type: 'card', icon: '⚡', tag: 'LIVE AUTOMATION', title: 'Automated U.S. Stock Trading Bot', sub: 'Fully automated pipeline from screening to order management, with exposure caps, duplicate order protection, and auditable live decisions.', url: 'https://github.com/RakheebShaik-web/alpaca.bot-eod-dashboard' },
-        { type: 'card', icon: '📊', tag: 'RESEARCH PLATFORM', title: 'Quant Screener', sub: 'Ranks liquid stocks, confirms trend and momentum on completed bars, then sizes every trade using account risk and ATR based invalidation.', url: 'https://github.com/RakheebShaik-web/quant-screener' },
-        { type: 'card', icon: '📈', tag: 'RESEARCH · NO LIVE ORDERS', title: 'NSE Options Selling System', sub: 'Researches liquid NSE underlyings and explicit volatility, trend, liquidity, and event risk conditions before a structure is considered.', url: 'https://github.com/RakheebShaik-web/stocks-options-strategy' },
-        { type: 'text', text: "Process: Research the edge → Engineer the risk → Automate execution → Measure and refine" },
+        { type: 'divider', text: 'ENGINEERING EVIDENCE' },
+        { type: 'text', text: 'No inflated return claims or cherry-picked numbers — just the controls built into the systems.' },
+        { type: 'panel', title: 'System Evidence', items: [
+          { label: 'EXECUTION', value: 'Automated order lifecycle' },
+          { label: 'RISK', value: 'Exposure caps · ATR sizing' },
+          { label: 'SAFETY', value: 'Duplicate-order protection' },
+          { label: 'DATA', value: 'Completed-bar signals' },
+          { label: 'AUDIT', value: 'Logged decisions · alerts' },
+          { label: 'SCOPE', value: 'Live + research systems' },
+        ]},
+        { type: 'text', text: 'Detailed performance statistics are shared only with their assumptions, testing window, costs, and limitations.' },
+      ],
+    },
+    '/source': {
+      desc: 'Portfolio source code',
+      response: () => [
+        { type: 'divider', text: 'SOURCE' },
+        { type: 'text', text: 'This portfolio is built with plain HTML, CSS, and JavaScript — no framework and no build step.' },
+        { type: 'list', items: [
+          { icon: '🐙', name: 'rakheebshaik.com', desc: 'VIEW SOURCE ON GITHUB', url: 'https://github.com/RakheebShaik-web/rakheebshaik.com' },
+        ]},
       ],
     },
     '/stack': {
@@ -330,7 +368,7 @@ function initDesktop() {
       desc: 'Available commands',
       response: () => [
         { type: 'divider', text: 'COMMANDS' },
-        { type: 'text', text: "Available commands:\n\n/about    — Who I am\n/systems  — Trading systems\n/stack    — Tech stack\n/resume   — Full resume\n/contact  — Get in touch\n/help     — This message" },
+        { type: 'text', text: "Available commands:\n\n/systems  — Trading systems\n/github   — Recent contributions\n/about    — Who I am\n/metrics  — Engineering evidence\n/source   — Portfolio source\n/stack    — Tech stack\n/resume   — Full resume\n/contact  — Get in touch\n/help     — This message\n\nKeyboard: ↑↓ history · Tab autocomplete · Esc close" },
       ],
     },
   };
@@ -464,6 +502,65 @@ function initDesktop() {
     scrollBottom();
   }
 
+  function addGitHubActivity() {
+    const panel = document.createElement('div');
+    panel.className = 'win-panel';
+
+    const bar = document.createElement('div');
+    bar.className = 'win-panel-bar';
+    bar.textContent = '◫ Recent Public Activity';
+
+    const body = document.createElement('div');
+    body.className = 'win-panel-body github-activity';
+    body.textContent = 'Loading public GitHub activity...';
+
+    panel.append(bar, body);
+    $('#messages').appendChild(panel);
+    scrollBottom();
+
+    fetch('https://api.github.com/users/RakheebShaik-web/events/public?per_page=100', {
+      headers: { Accept: 'application/vnd.github+json' },
+    })
+      .then(response => {
+        if (!response.ok) throw new Error('GitHub activity is temporarily unavailable');
+        return response.json();
+      })
+      .then(events => {
+        const pushes = events.filter(event => event.type === 'PushEvent');
+        const repositories = new Set(events.map(event => event.repo?.name).filter(Boolean));
+        const oldest = events.at(-1)?.created_at;
+        const days = oldest ? Math.max(1, Math.ceil((Date.now() - new Date(oldest).getTime()) / 86400000)) : 0;
+        const stats = [
+          ['PUBLIC EVENTS', events.length],
+          ['PUSH EVENTS', pushes.length],
+          ['REPOS TOUCHED', repositories.size],
+          ['ACTIVITY WINDOW', days ? `${days} days` : '—'],
+        ];
+
+        body.textContent = '';
+        const grid = document.createElement('div');
+        grid.className = 'github-stat-grid';
+        stats.forEach(([label, value]) => {
+          const item = document.createElement('div');
+          item.className = 'github-stat';
+          const small = document.createElement('small');
+          small.textContent = label;
+          const strong = document.createElement('strong');
+          strong.textContent = String(value);
+          item.append(small, strong);
+          grid.appendChild(item);
+        });
+        const note = document.createElement('p');
+        note.className = 'github-note';
+        note.textContent = days ? `Latest ${events.length} public events across approximately ${days} days. GitHub activity may be delayed.` : 'No recent public events returned by GitHub.';
+        body.append(grid, note);
+        scrollBottom();
+      })
+      .catch(() => {
+        body.textContent = 'Live activity is unavailable right now. Open the GitHub profile below to view the contribution graph.';
+      });
+  }
+
   function addTools(groups) {
     const wrapper = document.createElement('div');
     wrapper.className = 'win-panel';
@@ -510,6 +607,7 @@ function initDesktop() {
   async function sendCommand(cmd) {
     if (isTyping) return;
     const data = commands[cmd];
+    trackCommand(cmd, Boolean(data));
     if (!data) {
       addMessage('user', '> You', [cmd]);
       addMessage('system', 'rakheeb.exe', [`Unknown command: ${cmd}. Type /help for available commands.`]);
@@ -536,6 +634,7 @@ function initDesktop() {
       else if (part.type === 'card') addCard(part.icon, part.tag, part.title, part.sub, part.url);
       else if (part.type === 'list') addList(part.items);
       else if (part.type === 'panel') addPanel(part.title, part.items);
+      else if (part.type === 'github') addGitHubActivity();
       else if (part.type === 'tools') addTools(part.groups);
       else if (part.type === 'heading') addHeading(part.text);
       await new Promise(r => setTimeout(r, 200));
@@ -546,11 +645,15 @@ function initDesktop() {
 
   // ─── Input ───
   const form = $('#chat-form');
+  const commandHistory = [];
+  let historyIndex = 0;
 
   form.addEventListener('submit', (e) => {
     e.preventDefault();
     const val = input.value.trim();
     if (!val) return;
+    if (commandHistory.at(-1) !== val) commandHistory.push(val);
+    historyIndex = commandHistory.length;
     input.value = '';
     closeSugg();
     if (val.startsWith('/')) sendCommand(val);
@@ -583,6 +686,31 @@ function initDesktop() {
     });
   });
 
+  input.addEventListener('keydown', (event) => {
+    if (event.key === 'ArrowUp' && commandHistory.length) {
+      event.preventDefault();
+      historyIndex = Math.max(0, historyIndex - 1);
+      input.value = commandHistory[historyIndex];
+      closeSugg();
+    } else if (event.key === 'ArrowDown' && commandHistory.length) {
+      event.preventDefault();
+      historyIndex = Math.min(commandHistory.length, historyIndex + 1);
+      input.value = historyIndex === commandHistory.length ? '' : commandHistory[historyIndex];
+      closeSugg();
+    } else if (event.key === 'Tab') {
+      const value = input.value.trim().toLowerCase();
+      const match = Object.keys(commands).find(command => command.startsWith(value));
+      if (match) {
+        event.preventDefault();
+        input.value = match;
+        closeSugg();
+      }
+    } else if (event.key === 'Escape') {
+      closeSugg();
+      closeMenus();
+    }
+  });
+
   function closeSugg() {
     const p = $('#sugg-popup');
     if (p) { p.innerHTML = ''; p.className = 'sugg-popup'; }
@@ -591,6 +719,12 @@ function initDesktop() {
   document.addEventListener('click', (e) => {
     if (!e.target.closest('.input-area')) closeSugg();
   });
+
+  function trackCommand(command, recognized) {
+    const detail = { command, recognized };
+    window.dispatchEvent(new CustomEvent('portfolio:command', { detail }));
+    if (typeof window.va === 'function') window.va('event', { name: 'portfolio_command', data: detail });
+  }
 }
 
 // ─── Init ───

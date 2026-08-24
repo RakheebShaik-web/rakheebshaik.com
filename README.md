@@ -14,6 +14,9 @@ A pixel-perfect Win95 desktop experience where all my info lives inside a single
 |---------|-------------|
 | `/about` | Who I am, what I do, quick facts |
 | `/systems` | My algorithmic trading systems with details |
+| `/github` | Recent public GitHub activity and contributions |
+| `/metrics` | Engineering controls and system evidence |
+| `/source` | Portfolio source code |
 | `/stack` | Full tech stack — languages, frameworks, tools |
 | `/resume` | Work experience timeline |
 | `/contact` | All my links — GitHub, LinkedIn, email |
