@@ -90,11 +90,54 @@ function initDesktop() {
   let messages = [];
   let isTyping = false;
   let inited = false;
+  const input = $('#chat-input');
+  const sendButton = $('#send-btn');
 
   // Open window
   $('#icon-open').addEventListener('click', () => openWindow());
   $('#btn-close').addEventListener('click', closeWindow);
   $('#btn-minimize').addEventListener('click', closeWindow);
+
+  // Match the reference desktop icon: click to open, drag to reposition.
+  icons.forEach(icon => {
+    let startX = 0;
+    let startY = 0;
+    let originX = 0;
+    let originY = 0;
+    let dragged = false;
+
+    icon.addEventListener('pointerdown', (event) => {
+      startX = event.clientX;
+      startY = event.clientY;
+      originX = icon.offsetLeft;
+      originY = icon.offsetTop;
+      dragged = false;
+      icon.setPointerCapture(event.pointerId);
+    });
+
+    icon.addEventListener('pointermove', (event) => {
+      if (!icon.hasPointerCapture(event.pointerId)) return;
+      const dx = event.clientX - startX;
+      const dy = event.clientY - startY;
+      if (Math.hypot(dx, dy) < 4) return;
+      dragged = true;
+      icon.classList.add('dragging');
+      const maxX = Math.max(0, window.innerWidth - icon.offsetWidth);
+      const maxY = Math.max(0, window.innerHeight - icon.offsetHeight);
+      icon.style.left = `${Math.min(maxX, Math.max(0, originX + dx))}px`;
+      icon.style.top = `${Math.min(maxY, Math.max(0, originY + dy))}px`;
+    });
+
+    icon.addEventListener('pointerup', (event) => {
+      if (icon.hasPointerCapture(event.pointerId)) icon.releasePointerCapture(event.pointerId);
+      icon.classList.remove('dragging');
+      if (dragged) event.preventDefault();
+    });
+
+    icon.addEventListener('click', (event) => {
+      if (dragged) event.stopImmediatePropagation();
+    }, true);
+  });
 
 
 
@@ -102,7 +145,11 @@ function initDesktop() {
     chatWindow.style.display = 'flex';
     chatWindow.classList.add('active');
     $('#desktop-icons').classList.add('hidden');
-    if (!inited) { inited = true; renderChips(); }
+    if (!inited) {
+      inited = true;
+      input.disabled = true;
+      sendButton.disabled = true;
+    }
     if (cmd) setTimeout(() => sendCommand(cmd), 400);
     else if (messages.length === 0) showWelcome();
   }
@@ -163,13 +210,13 @@ function initDesktop() {
     const dd = $('#active-dropdown');
     if (dd) {
       dd.classList.remove('open');
-      setTimeout(() => { if (dd.parentNode) dd.remove(); }, 160);
+      if (dd.parentNode) dd.remove();
     }
   }
 
   document.addEventListener('click', closeMenus);
 
-  // ─── Easter Egg: double-click "2003" ───
+  // ─── Easter Egg: double-click "1995" ───
   let lastClick = 0;
   $('#status-year').addEventListener('click', () => {
     const now = Date.now();
@@ -183,7 +230,7 @@ function initDesktop() {
     overlay.innerHTML = `
       <div class="egg-window">
         <div class="title-bar">
-          <span class="title-bar-text">rakheeb_2003.bmp</span>
+          <span class="title-bar-text">rakheeb_1995.bmp</span>
           <div class="title-bar-controls">
             <button class="title-btn" id="egg-close">✕</button>
           </div>
@@ -254,7 +301,7 @@ function initDesktop() {
       desc: 'Full resume view',
       response: () => [
         { type: 'divider', text: 'RESUME' },
-        { type: 'text', text: "RAKHEEB SHAIKH\nAlgorithmic Trader & Quant Developer\nHyderabad, India\n\nshaikrakheeb280@gmail.com\ngithub.com/RakheebShaik-web\nlinkedin.com/in/rakheeb-shaik" },
+        { type: 'text', text: "RAKHEEB SHAIKH\nAlgorithmic Trader & Quant Developer\nHyderabad, India\n\nshaikrakheeb280@gmail.com\ngithub.com/RakheebShaik-web\nlinkedin.com/in/rakheeb-shaik-aba0762b5" },
         { type: 'heading', text: 'SUMMARY' },
         { type: 'text', text: "Quantitative trading systems built from research, tested through data, and deployed with disciplined execution across U.S. equities and Indian options." },
         { type: 'heading', text: 'SYSTEMS' },
@@ -273,7 +320,7 @@ function initDesktop() {
         { type: 'list', items: [
           { icon: '✉️', name: 'shaikrakheeb280@gmail.com', desc: 'EMAIL', url: 'mailto:shaikrakheeb280@gmail.com' },
           { icon: '🐙', name: 'github.com/RakheebShaik-web', desc: 'GITHUB', url: 'https://github.com/RakheebShaik-web' },
-          { icon: '💼', name: 'linkedin.com/in/rakheeb-shaik', desc: 'LINKEDIN', url: 'https://www.linkedin.com/in/rakheeb-shaik-aba0762b5/' },
+          { icon: '💼', name: 'linkedin.com/in/rakheeb-shaik-aba0762b5', desc: 'LINKEDIN', url: 'https://www.linkedin.com/in/rakheeb-shaik-aba0762b5/' },
           { icon: '📍', name: 'Hyderabad, India (IST)', desc: 'LOCATION', url: null },
         ]},
         { type: 'text', text: "🟢 Open to opportunities — quant development, trading automation, and anything where careful engineering meets markets." },
@@ -294,7 +341,8 @@ function initDesktop() {
       "Hey there 👋",
       "I'm Rakheeb Shaikh",
       "I build automated trading systems",
-      "Algorithmic Trader · Quant Developer · Hyderabad, India",
+      "Algorithmic Trader · Quant Developer",
+      "Based in Hyderabad, India",
       "Type a command below or tap one to explore ↓",
     ];
     for (let i = 0; i < msgs.length; i++) {
@@ -306,19 +354,26 @@ function initDesktop() {
       $('#messages').appendChild(cur);
       scrollBottom();
 
-      await new Promise(r => setTimeout(r, 700));
+      await new Promise(r => setTimeout(r, 700 + Math.random() * 350));
 
       // Remove cursor, show message
       cur.remove();
       addMessage('system', 'rakheeb.exe', [msgs[i]]);
-      await new Promise(r => setTimeout(r, 500));
     }
+    await new Promise(r => setTimeout(r, 400));
+    renderChips();
+    input.disabled = false;
+    sendButton.disabled = false;
+    input.focus();
   }
 
   function resetChat() {
     messages = [];
     $('#messages').innerHTML = '';
+    $('#chips').innerHTML = '';
     isTyping = false;
+    input.disabled = true;
+    sendButton.disabled = true;
     showWelcome();
   }
 
@@ -329,7 +384,14 @@ function initDesktop() {
     row.innerHTML = `<span class="msg-handle">${handle}</span>`;
     const bubble = document.createElement('div');
     bubble.className = `msg-bubble ${role === 'user' ? 'msg-usr' : 'msg-sys'}`;
-    bubble.innerHTML = parts.map(p => typeof p === 'string' ? p.replace(/\n/g, '<br>') : p).join('<br><br>');
+    parts.forEach((part, index) => {
+      if (index) bubble.append(document.createElement('br'), document.createElement('br'));
+      const lines = String(part).split('\n');
+      lines.forEach((line, lineIndex) => {
+        if (lineIndex) bubble.appendChild(document.createElement('br'));
+        bubble.appendChild(document.createTextNode(line));
+      });
+    });
     row.appendChild(bubble);
     const ts = document.createElement('span');
     ts.className = 'timestamp';
@@ -484,7 +546,6 @@ function initDesktop() {
 
   // ─── Input ───
   const form = $('#chat-form');
-  const input = $('#chat-input');
 
   form.addEventListener('submit', (e) => {
     e.preventDefault();

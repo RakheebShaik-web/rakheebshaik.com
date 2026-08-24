@@ -29,7 +29,7 @@ A pixel-perfect Win95 desktop experience where all my info lives inside a single
 - **Command chips** — tap to explore without typing
 - **Autocomplete** — start typing `/` for command suggestions
 - **Menu dropdowns** — File, View, Help with Win95-style dropdowns
-- **Easter egg** — double-click "2003" in the status bar
+- **Easter egg** — double-click "1995" in the status bar
 - **Mobile responsive** — full-screen chat window on phones
 
 ## Tech

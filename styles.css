@@ -3,9 +3,10 @@ html,body,#app{height:100%;width:100%}
 body{
   font-family:'IBM Plex Mono',monospace;
   font-size:13px;
+  line-height:1.55;
   color:#1a1a1a;
   background:#008080;
-  -webkit-font-smoothing:antialiased;
+  -webkit-font-smoothing:auto;
   overscroll-behavior:none;
   overflow:hidden;
 }
@@ -57,30 +58,30 @@ a{color:inherit;text-decoration:none}
 
 /* ─── DESKTOP ICONS ─── */
 #desktop-icons{
-  position:absolute;top:0;left:0;right:0;
-  display:flex;flex-direction:column;flex-wrap:wrap;
-  align-content:flex-start;gap:10px;
-  padding:18px 8px;height:100%;
+  position:absolute;inset:0;height:100%;
 }
 #desktop-icons.hidden{display:none}
 .desk-icon{
-  width:86px;display:flex;flex-direction:column;align-items:center;gap:5px;
-  padding:7px 4px;border:1px solid transparent;
+  position:absolute;left:12px;top:16px;
+  width:84px;display:flex;flex-direction:column;align-items:center;gap:4px;
+  padding:6px 4px;border:1px solid transparent;
   user-select:none;-webkit-user-select:none;touch-action:none;
   cursor:pointer;background:none;
 }
 .desk-icon-img{
   width:48px;height:48px;object-fit:contain;
   image-rendering:pixelated;pointer-events:none;
-  filter:drop-shadow(1px 2px 0 rgba(0,0,0,.45));
+  filter:drop-shadow(1px 2px 0 rgba(0,0,0,.45));transition:transform .12s,filter .12s;
 }
 .desk-icon-label{
-  font-size:12px;color:#fff;text-align:center;line-height:1.15;
+  font-size:11px;color:#fff;text-align:center;line-height:1.55;
   text-shadow:1px 1px 0 rgba(0,0,0,.6);
   padding:1px 4px;pointer-events:none;white-space:nowrap;
 }
 .desk-icon:active .desk-icon-img{filter:brightness(1.1) drop-shadow(0 2px 4px rgba(0,0,0,.5));transform:scale(1.06)}
 .desk-icon:active .desk-icon-label{background:var(--win95-navy);color:#fff}
+.desk-icon.dragging{opacity:.75;cursor:grabbing;z-index:5}
+.desk-icon.dragging .desk-icon-label{background:var(--win95-navy);color:#fff}
 
 /* ─── WINDOW ─── */
 .window{
@@ -90,12 +91,12 @@ a{color:inherit;text-decoration:none}
   background:var(--win95-gray);
   box-shadow:inset -1px -1px 0 #808080,inset 1px 1px 0 #fff,inset -2px -2px 0 #404040,inset 2px 2px 0 #dfdfdf;
   position:relative;
-  animation:winOpen .08s step-end;
+  animation:winOpen .18s cubic-bezier(.2,.8,.3,1);
 }
 @media(min-width:520px){
   .window{height:auto;min-height:700px;max-height:85vh;margin:0}
 }
-@keyframes winOpen{from{opacity:0}to{opacity:1}}
+@keyframes winOpen{from{opacity:0;transform:scale(.97)}to{opacity:1;transform:scale(1)}}
 
 /* ─── TITLE BAR ─── */
 .title-bar{
@@ -147,12 +148,10 @@ a{color:inherit;text-decoration:none}
   box-shadow:inset -1px -1px 0 #808080,inset 1px 1px 0 #fff,inset -2px -2px 0 #404040,inset 2px 2px 0 #dfdfdf,
   2px 2px 0 rgba(0,0,0,.25);
   padding:2px;
-  opacity:0;transform:translateY(-4px);
-  pointer-events:none;
-  transition:opacity .15s ease,transform .15s ease;
+  display:none;
 }
 .menu-dropdown.open{
-  opacity:1;transform:translateY(0);pointer-events:auto;
+  display:block;
 }
 .menu-dropdown-item{
   display:block;width:100%;text-align:left;font-family:'IBM Plex Mono',monospace;font-size:12px;
@@ -208,15 +207,16 @@ a{color:inherit;text-decoration:none}
 .timestamp{font-size:10px;color:#404040;opacity:.6;font-family:'IBM Plex Mono',monospace;padding:0 3px}
 .msg-bubble{max-width:85%;padding:8px 14px;font-size:14px;line-height:1.6;word-break:break-word}
 .msg-sys{
-  background:#fffff0;border:1px solid #e8e8c8;
-  box-shadow:none;
+  background:#ffffcc;border:1px solid #e6e6a0;
+  box-shadow:1px 1px 0 #e6e6a0;
 }
 .msg-usr{
-  background:#dce8ff;border:1px solid #b0c8e8;
-  box-shadow:1px 1px 0 #b0c8e8;font-weight:500;color:#000080;
+  background:#dce8ff;border:1px solid #a0b8e0;
+  box-shadow:1px 1px 0 #a0b8e0;font-weight:500;color:#000080;
 }
 
-.typing-bubble{padding:8px 12px;min-height:28px}
+.msg-bubble{max-width:88%;padding:6px 10px;font-size:13px;line-height:1.55}
+.typing-bubble{padding:10px 16px;min-height:0}
 .typing-cursor{
   display:inline-block;width:8px;height:14px;background:#000;
   animation:blink-block .8s step-end infinite;
@@ -242,9 +242,9 @@ a{color:inherit;text-decoration:none}
   box-shadow:inset -1px -1px 0 #808080,inset 1px 1px 0 #fff,inset -2px -2px 0 #404040,inset 2px 2px 0 #dfdfdf;
   border:none;cursor:pointer;
   text-align:left;font-family:inherit;color:inherit;
-  opacity:0;animation:cardIn .15s step-end forwards;
+  opacity:0;animation:cardIn .3s ease forwards;
 }
-@keyframes cardIn{from{opacity:0}to{opacity:1}}
+@keyframes cardIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
 .win-card:active{
   box-shadow:inset 1px 1px 0 #808080,inset -1px -1px 0 #fff,inset 2px 2px 0 #404040,inset -2px -2px 0 #dfdfdf;
   padding-top:9px;padding-left:11px;
@@ -372,9 +372,8 @@ a{color:inherit;text-decoration:none}
 @media(max-width:520px){
   body{overflow:auto}
   .desktop{min-height:100dvh;padding:0}
-  #desktop-icons{flex-direction:row;align-content:flex-start;padding:10px 6px;gap:4px}
-  .desk-icon{width:76px}
-  .desk-icon-img{width:40px;height:40px}
+  .desk-icon{width:84px}
+  .desk-icon-img{width:48px;height:48px}
   .desk-icon-label{font-size:11px}
   .window{
     width:100%;max-width:100%;height:100dvh;max-height:none;
@@ -387,8 +386,8 @@ a{color:inherit;text-decoration:none}
   .menu-bar{padding:3px 6px}
   .menu-item{font-size:13px;padding:4px 10px}
   .messages-scroll{padding:8px 8px 16px;font-size:14px}
-  .msg-bubble{max-width:92%;padding:8px 12px;font-size:14px;line-height:1.55}
-  .msg-row{margin-bottom:14px}
+  .msg-bubble{max-width:92%;padding:6px 10px;font-size:13px;line-height:1.55}
+  .msg-row{margin-bottom:6px}
   .chips-row{padding:6px 6px;gap:4px}
   .chip{font-size:14px;padding:4px 10px}
   .input-area{padding:4px}
