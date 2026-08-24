@@ -292,7 +292,6 @@ function initDesktop() {
       desc: 'Recent GitHub contributions',
       response: () => [
         { type: 'divider', text: 'GITHUB' },
-        { type: 'text', text: 'Recent public development activity from GitHub. Loaded after the command so it never slows the portfolio intro.' },
         { type: 'github' },
       ],
     },
@@ -542,7 +541,7 @@ function initDesktop() {
     const bar = document.createElement('div');
     bar.className = 'win-panel-bar';
     const barTitle = document.createElement('span');
-    barTitle.textContent = '◫ GitHub Contributions';
+    barTitle.textContent = '▦ GitHub Activity Monitor';
     const refreshButton = document.createElement('button');
     refreshButton.className = 'github-refresh';
     refreshButton.type = 'button';
@@ -577,9 +576,9 @@ function initDesktop() {
         const summaryCopy = document.createElement('div');
         const summaryTitle = document.createElement('span');
         summaryTitle.className = 'github-summary-title';
-        summaryTitle.textContent = 'public contributions';
+        summaryTitle.textContent = 'contributions recorded';
         const summaryPeriod = document.createElement('small');
-        summaryPeriod.textContent = contributionData.period;
+        summaryPeriod.textContent = `in the ${contributionData.period}`;
         summaryCopy.append(summaryTitle, summaryPeriod);
         summary.append(total, summaryCopy);
 
@@ -587,7 +586,7 @@ function initDesktop() {
         heatmapSection.className = 'github-heatmap-section';
         const heatmapHeading = document.createElement('div');
         heatmapHeading.className = 'github-heatmap-heading';
-        heatmapHeading.textContent = 'CONTRIBUTION ACTIVITY';
+        heatmapHeading.textContent = 'Daily activity';
         const heatmapWrap = document.createElement('div');
         heatmapWrap.className = 'github-heatmap-wrap';
         const heatmap = document.createElement('div');
@@ -612,20 +611,9 @@ function initDesktop() {
         legend.append(document.createTextNode('More'));
         heatmapSection.append(heatmapHeading, heatmapWrap, legend);
 
-        const status = document.createElement('div');
-        status.className = 'github-status';
-        [
-          [`${contributionData.activeDays}`, 'active days'],
-          [`${contributionData.longestStreak}d`, 'longest streak'],
-          [`${contributionData.publicRepos ?? '—'}`, 'public repos'],
-        ].forEach(([value, label]) => {
-          const item = document.createElement('span');
-          item.className = 'github-status-item';
-          const strong = document.createElement('strong');
-          strong.textContent = value;
-          item.append(strong, document.createTextNode(` ${label}`));
-          status.appendChild(item);
-        });
+        const facts = document.createElement('p');
+        facts.className = 'github-facts';
+        facts.textContent = `${contributionData.activeDays} active days  ·  ${contributionData.longestStreak}d longest streak  ·  ${contributionData.publicRepos ?? '—'} public repos`;
 
         const actions = document.createElement('div');
         actions.className = 'github-actions';
@@ -645,7 +633,7 @@ function initDesktop() {
         note.className = 'github-note';
         const refreshed = new Date(contributionData.refreshedAt).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
         note.textContent = `Live from GitHub · refreshed ${refreshed}`;
-        body.append(summary, heatmapSection, status, actions, note);
+        body.append(summary, heatmapSection, facts, actions, note);
         scrollBottom();
       } catch (_error) {
         body.textContent = 'Live contribution data is unavailable right now. Open the GitHub profile below to view the contribution graph.';

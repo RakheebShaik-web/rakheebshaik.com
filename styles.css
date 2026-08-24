@@ -287,29 +287,26 @@ a{color:inherit;text-decoration:none}
 .github-refresh:disabled{color:#808080;cursor:default}
 .win-panel-bar-icon{font-size:13px}
 .win-panel-body{padding:12px;background:#fff;margin:3px;box-shadow:inset 1px 1px 0 #808080,inset -1px -1px 0 #fff,inset 2px 2px 0 #404040,inset -2px -2px 0 #dfdfdf}
-.github-activity{font-size:12px;line-height:1.45;padding:10px}
-.github-summary{display:flex;align-items:baseline;gap:7px;padding:1px 2px 8px}
-.github-total{font-family:'VT323',monospace;font-size:27px;line-height:1;color:#000080;font-weight:400}
-.github-summary-title{display:inline;font-family:'VT323',monospace;font-size:16px;line-height:1;color:#000}
-.github-summary small{display:inline;color:#666;font-size:9px;text-transform:uppercase;letter-spacing:.55px;margin-left:7px}
-.github-heatmap-section{padding:8px;background:#fff;box-shadow:inset 1px 1px 0 #808080,inset -1px -1px 0 #fff,inset 2px 2px 0 #404040,inset -2px -2px 0 #dfdfdf}
-.github-heatmap-heading{font-family:'VT323',monospace;font-size:14px;color:#000080;margin-bottom:5px}
+.github-activity{font-size:12px;line-height:1.45;padding:10px;background:#c0c0c0;box-shadow:none}
+.github-summary{display:flex;align-items:baseline;gap:6px;padding:1px 2px 10px;white-space:nowrap}
+.github-total{font-family:'VT323',monospace;font-size:23px;line-height:1;color:#000080;font-weight:400}
+.github-summary-title{display:inline;font-family:'IBM Plex Mono',monospace;font-size:11px;color:#000}
+.github-summary small{display:inline;color:#404040;font-size:9px;letter-spacing:0;margin-left:0;text-transform:none}
+.github-heatmap-section{position:relative;padding:13px 8px 8px;background:#fff;box-shadow:inset 1px 1px 0 #808080,inset -1px -1px 0 #fff,inset 2px 2px 0 #404040,inset -2px -2px 0 #dfdfdf}
+.github-heatmap-heading{position:absolute;top:-8px;left:8px;padding:0 4px;background:#c0c0c0;font-family:'VT323',monospace;font-size:14px;color:#000080}
 .github-heatmap-wrap{overflow-x:auto;padding-bottom:3px;scrollbar-width:thin}
 .github-heatmap{display:grid;grid-template-rows:repeat(7,5px);grid-auto-flow:column;grid-auto-columns:5px;gap:1px;width:max-content;min-width:100%}
 .github-day{display:inline-block;width:5px;height:5px;background:#ebedf0;border:1px solid rgba(27,31,35,.08)}
 .github-day-1{background:#9be9a8}.github-day-2{background:#40c463}.github-day-3{background:#30a14e}.github-day-4{background:#216e39}
 .github-legend{display:flex;align-items:center;justify-content:flex-end;gap:3px;color:#666;font-size:8px;margin-top:4px}
-.github-status{display:flex;margin-top:6px;background:#c0c0c0;box-shadow:inset 1px 1px 0 #808080,inset -1px -1px 0 #fff}
-.github-status-item{flex:1;min-width:0;padding:4px 6px;color:#404040;white-space:nowrap;text-align:center;border-right:1px solid #808080}
-.github-status-item:last-child{border-right:0}
-.github-status-item strong{color:#000080;font-size:12px}
-.github-actions{display:flex;gap:6px;margin-top:8px}
-.github-action{flex:1;padding:5px 7px;background:#c0c0c0;color:#000;text-decoration:none;text-align:center;box-shadow:inset -1px -1px 0 #404040,inset 1px 1px 0 #fff}
+.github-facts{margin:8px 2px 0;color:#000;font-size:10px;white-space:normal}
+.github-actions{display:flex;gap:6px;margin-top:9px}
+.github-action{padding:4px 12px;background:#c0c0c0;color:#000;text-decoration:none;text-align:center;box-shadow:inset -1px -1px 0 #404040,inset 1px 1px 0 #fff}
 .github-action:active{box-shadow:inset 1px 1px 0 #404040,inset -1px -1px 0 #fff}
-.github-note{margin-top:7px;color:#666;font-size:9px;text-align:right}
+.github-note{margin:9px -7px -7px;padding:3px 5px;color:#404040;font-size:9px;text-align:left;background:#c0c0c0;box-shadow:inset 1px 1px 0 #808080,inset -1px -1px 0 #fff}
 
 @media (max-width:420px){
-  .github-status-item{padding-inline:3px;font-size:9px}
+  .github-summary{white-space:normal;flex-wrap:wrap}
   .github-actions{display:grid;grid-template-columns:1fr}
 }
 
