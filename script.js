@@ -530,7 +530,14 @@ function initDesktop() {
 
     const bar = document.createElement('div');
     bar.className = 'win-panel-bar';
-    bar.textContent = '◫ Recent Public Activity';
+    const barTitle = document.createElement('span');
+    barTitle.textContent = '◫ GitHub Contributions';
+    const refreshButton = document.createElement('button');
+    refreshButton.className = 'github-refresh';
+    refreshButton.type = 'button';
+    refreshButton.textContent = 'Refresh';
+    refreshButton.setAttribute('aria-label', 'Refresh GitHub contribution data');
+    bar.append(barTitle, refreshButton);
 
     const body = document.createElement('div');
     body.className = 'win-panel-body github-activity';
@@ -540,23 +547,32 @@ function initDesktop() {
     $('#messages').appendChild(panel);
     scrollBottom();
 
-    fetch('https://api.github.com/users/RakheebShaik-web/events/public?per_page=100', {
-      headers: { Accept: 'application/vnd.github+json' },
-    })
-      .then(response => {
-        if (!response.ok) throw new Error('GitHub activity is temporarily unavailable');
-        return response.json();
-      })
-      .then(events => {
+    async function refreshGitHubActivity() {
+      refreshButton.disabled = true;
+      refreshButton.textContent = 'Loading...';
+      body.textContent = 'Loading live GitHub contribution data...';
+
+      try {
+        const [contributionResponse, eventsResponse] = await Promise.all([
+          fetch(`/api/github-contributions?refresh=${Date.now()}`, { cache: 'no-store' }),
+          fetch('https://api.github.com/users/RakheebShaik-web/events/public?per_page=100', {
+            cache: 'no-store',
+            headers: { Accept: 'application/vnd.github+json' },
+          }),
+        ]);
+
+        if (!contributionResponse.ok) throw new Error('Contribution total is unavailable');
+        const contributionData = await contributionResponse.json();
+        const events = eventsResponse.ok ? await eventsResponse.json() : [];
         const pushes = events.filter(event => event.type === 'PushEvent');
         const repositories = new Set(events.map(event => event.repo?.name).filter(Boolean));
         const oldest = events.at(-1)?.created_at;
         const days = oldest ? Math.max(1, Math.ceil((Date.now() - new Date(oldest).getTime()) / 86400000)) : 0;
         const stats = [
-          ['PUBLIC EVENTS', events.length],
+          ['CONTRIBUTIONS', contributionData.contributions],
           ['PUSH EVENTS', pushes.length],
           ['REPOS TOUCHED', repositories.size],
-          ['ACTIVITY WINDOW', days ? `${days} days` : '—'],
+          ['PUBLIC EVENTS', events.length || '—'],
         ];
 
         body.textContent = '';
@@ -574,13 +590,21 @@ function initDesktop() {
         });
         const note = document.createElement('p');
         note.className = 'github-note';
-        note.textContent = days ? `Latest ${events.length} public events across approximately ${days} days. GitHub activity may be delayed.` : 'No recent public events returned by GitHub.';
+        const refreshed = new Date(contributionData.refreshedAt).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+        const activityNote = days ? ` Public events cover approximately ${days} days.` : '';
+        note.textContent = `${contributionData.contributions} contributions in the ${contributionData.period}. Refreshed ${refreshed}.${activityNote}`;
         body.append(grid, note);
         scrollBottom();
-      })
-      .catch(() => {
-        body.textContent = 'Live activity is unavailable right now. Open the GitHub profile below to view the contribution graph.';
-      });
+      } catch (_error) {
+        body.textContent = 'Live contribution data is unavailable right now. Open the GitHub profile below to view the contribution graph.';
+      } finally {
+        refreshButton.disabled = false;
+        refreshButton.textContent = 'Refresh';
+      }
+    }
+
+    refreshButton.addEventListener('click', refreshGitHubActivity);
+    refreshGitHubActivity();
   }
 
   function addTools(groups) {

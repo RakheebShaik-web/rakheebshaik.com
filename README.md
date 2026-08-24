@@ -31,6 +31,7 @@ A pixel-perfect Win95 desktop experience where all my info lives inside a single
 - **Typing cursor** — blinks between messages as they load one by one
 - **Command chips** — tap to explore without typing
 - **Autocomplete** — start typing `/` for command suggestions
+- **Live GitHub contributions** — real last-12-month count with in-panel refresh
 - **Menu dropdowns** — File, View, Help with Win95-style dropdowns
 - **Easter egg** — double-click "1995" in the status bar
 - **Mobile responsive** — full-screen chat window on phones

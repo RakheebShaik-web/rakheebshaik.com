@@ -282,6 +282,9 @@ a{color:inherit;text-decoration:none}
   color:#fff;padding:3px 8px;font-family:'VT323',monospace;font-size:15px;
   display:flex;align-items:center;gap:6px;
 }
+.github-refresh{margin-left:auto;border:0;background:#c0c0c0;color:#000;font-family:'VT323',monospace;font-size:13px;line-height:1;padding:2px 8px;box-shadow:inset -1px -1px 0 #404040,inset 1px 1px 0 #fff;cursor:pointer}
+.github-refresh:active{box-shadow:inset 1px 1px 0 #404040,inset -1px -1px 0 #fff;padding-top:3px;padding-left:9px}
+.github-refresh:disabled{color:#808080;cursor:default}
 .win-panel-bar-icon{font-size:13px}
 .win-panel-body{padding:12px;background:#fff;margin:3px;box-shadow:inset 1px 1px 0 #808080,inset -1px -1px 0 #fff,inset 2px 2px 0 #404040,inset -2px -2px 0 #dfdfdf}
 .github-activity{font-size:12px;line-height:1.55}
